@@ -2,7 +2,6 @@
 Main Assistant class for AVA.
 Orchestrates all services and handles the main interaction loop.
 """
-from typing import Optional
 from config.settings import settings
 from services.speech_recognition_service import SpeechRecognitionService
 from services.text_to_speech_service import TextToSpeechService
@@ -28,22 +27,15 @@ class Assistant:
         self.name = settings.ASSISTANT_NAME
         self.wake_word = settings.WAKE_WORD
         self.is_running = False
-        
-        # Initialize services
         self.speech_recognition = SpeechRecognitionService()
         self.tts = TextToSpeechService()
         self.ai = AIService()
-        
-        # Initialize conversation manager
         self.conversation = ConversationManager()
-        
-        # Initialize command registry
         self.commands = CommandRegistry()
         self._register_default_commands()
     
-    def _register_default_commands(self) -> None:
+    def _register_default_commands(self):
         """Register built-in commands."""
-        # Basic commands
         self.commands.register(TimeCommand())
         self.commands.register(DateCommand())
         self.commands.register(ExitCommand())
@@ -51,8 +43,6 @@ class Assistant:
         self.commands.register(HelpCommand(self.commands))
         self.commands.register(ContinueCommand(self.tts))
         self.commands.register(StopCommand(self.tts))
-        
-        # Local system commands
         self.commands.register(OpenAppCommand())
         self.commands.register(CloseAppCommand())
         self.commands.register(BrowserSearchCommand())
@@ -61,55 +51,41 @@ class Assistant:
         self.commands.register(SystemControlCommand())
         self.commands.register(ScreenshotCommand())
     
-    def greet(self) -> None:
+    def greet(self):
         """Greet the user."""
         greeting = get_greeting()
         message = f"{greeting}! I'm {self.name}, your personal AI assistant. How can I help you today?"
         print_colored(f"\n{self.name}: {message}", "cyan")
         self.tts.speak(message)
     
-    def process_input(self, user_input: str) -> Optional[str]:
-        """
-        Process user input and generate response.
-        
-        Args:
-            user_input: The user's spoken or typed input
-            
-        Returns:
-            Response string or None if should exit, or special signals
-        """
+    def process_input(self, user_input: str):
+        """Process user input and generate response."""
         if not user_input:
             return "I didn't catch that. Could you please repeat?"
         
-        # Check for commands first
         command_response = self.commands.execute(user_input)
         
         if command_response:
             if command_response == "__EXIT__":
-                return None  # Signal to exit
+                return None
             if command_response == "__CONTINUE__":
-                return "__CONTINUE__"  # Signal to continue speaking
+                return "__CONTINUE__"
             if command_response == "__STOP__":
                 self.tts.stop()
                 return "Okay, I'll be quiet."
             return command_response
         
-        # If no command matched, use AI
         ai_response = self.ai.get_response(user_input)
-        
-        # Log the exchange
         self.conversation.add_exchange(user_input, ai_response or "")
-        
         return ai_response
     
-    def respond(self, response: str) -> None:
+    def respond(self, response: str):
         """Output response via speech and text."""
         print_colored(f"\n{self.name}: {response}", "cyan")
-        # Clean the response before speaking (remove markdown, links, emojis, etc.)
         clean_response = clean_text_for_speech(response)
         self.tts.speak(clean_response)
     
-    def run_voice_mode(self) -> None:
+    def run_voice_mode(self):
         """Run AVA in voice-activated mode."""
         self.is_running = True
         self.greet()
@@ -119,17 +95,13 @@ class Assistant:
         
         while self.is_running:
             try:
-                # Listen for user input
                 success, user_input = self.speech_recognition.listen(timeout=10)
                 
                 if success and user_input:
                     print_colored(f"\nYou: {user_input}", "green")
-                    
-                    # Process and respond
                     response = self.process_input(user_input)
                     
                     if response is None:
-                        # Exit signal
                         self.shutdown()
                         break
                     
@@ -141,7 +113,7 @@ class Assistant:
             except Exception as e:
                 log_message(f"Error in main loop: {e}", "error")
     
-    def run_text_mode(self) -> None:
+    def run_text_mode(self):
         """Run AVA in text input mode (for testing without microphone)."""
         self.is_running = True
         self.greet()
@@ -163,7 +135,6 @@ class Assistant:
                     break
                 
                 if response == "__CONTINUE__":
-                    # Continue speaking last response
                     if self.tts.last_response:
                         print_colored(f"\n{self.name}: [Continuing...] {self.tts.last_response}", "cyan")
                         clean_response = clean_text_for_speech(self.tts.last_response)
@@ -180,14 +151,13 @@ class Assistant:
             except Exception as e:
                 log_message(f"Error in text mode: {e}", "error")
     
-    def shutdown(self) -> None:
+    def shutdown(self):
         """Shutdown the assistant gracefully."""
         self.is_running = False
         farewell = f"Goodbye! It was nice talking to you. {self.name} signing off."
         print_colored(f"\n{self.name}: {farewell}", "cyan")
         self.tts.speak(farewell)
         
-        # Show session summary
         summary = self.conversation.get_summary()
         print_colored(f"\nSession duration: {summary['duration']}", "magenta")
         print_colored(f"Total exchanges: {summary['exchanges']}", "magenta")

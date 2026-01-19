@@ -2,7 +2,6 @@
 Conversation Manager for AVA.
 Handles conversation flow and context management.
 """
-from typing import List, Dict, Optional
 from datetime import datetime
 from utils.helpers import log_message
 
@@ -12,11 +11,11 @@ class ConversationManager:
     
     def __init__(self, max_context_length: int = 20):
         self.max_context_length = max_context_length
-        self.conversation_log: List[Dict] = []
+        self.conversation_log = []
         self.session_start = datetime.now()
-        self.user_name: Optional[str] = None
+        self.user_name = None
     
-    def add_exchange(self, user_input: str, assistant_response: str) -> None:
+    def add_exchange(self, user_input: str, assistant_response: str):
         """Add a conversation exchange to the log."""
         exchange = {
             "timestamp": datetime.now().isoformat(),
@@ -25,11 +24,10 @@ class ConversationManager:
         }
         self.conversation_log.append(exchange)
         
-        # Trim if exceeds max length
         if len(self.conversation_log) > self.max_context_length:
             self.conversation_log = self.conversation_log[-self.max_context_length:]
     
-    def get_context(self) -> List[Dict]:
+    def get_context(self) -> list:
         """Get the conversation context."""
         return self.conversation_log
     
@@ -43,17 +41,17 @@ class ConversationManager:
             return f"{minutes} minutes and {seconds} seconds"
         return f"{seconds} seconds"
     
-    def set_user_name(self, name: str) -> None:
+    def set_user_name(self, name: str):
         """Set the user's name for personalization."""
         self.user_name = name
         log_message(f"User name set to: {name}", "info")
     
-    def clear_context(self) -> None:
+    def clear_context(self):
         """Clear the conversation context."""
         self.conversation_log = []
         log_message("Conversation context cleared.", "info")
     
-    def get_summary(self) -> Dict:
+    def get_summary(self) -> dict:
         """Get a summary of the conversation session."""
         return {
             "session_start": self.session_start.isoformat(),

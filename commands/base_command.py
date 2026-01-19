@@ -3,7 +3,6 @@ Base Command System for AVA.
 Provides extensible command handling for custom commands.
 """
 from abc import ABC, abstractmethod
-from typing import Dict, Optional, List, Callable
 from utils.helpers import log_message
 
 
@@ -18,7 +17,7 @@ class BaseCommand(ABC):
     
     @property
     @abstractmethod
-    def triggers(self) -> List[str]:
+    def triggers(self) -> list:
         """List of phrases that trigger this command."""
         pass
     
@@ -28,7 +27,7 @@ class BaseCommand(ABC):
         return "No description available."
     
     @abstractmethod
-    def execute(self, user_input: str) -> Optional[str]:
+    def execute(self, user_input: str):
         """
         Execute the command.
         
@@ -45,10 +44,10 @@ class CommandRegistry:
     """Registry for managing and executing commands."""
     
     def __init__(self):
-        self._commands: Dict[str, BaseCommand] = {}
-        self._trigger_map: Dict[str, str] = {}  # trigger -> command name
+        self._commands = {}
+        self._trigger_map = {}
     
-    def register(self, command: BaseCommand) -> None:
+    def register(self, command: BaseCommand):
         """Register a command."""
         self._commands[command.name] = command
         for trigger in command.triggers:
@@ -64,7 +63,7 @@ class CommandRegistry:
             return True
         return False
     
-    def find_command(self, user_input: str) -> Optional[BaseCommand]:
+    def find_command(self, user_input: str):
         """Find a command that matches the user input."""
         user_input_lower = user_input.lower()
         
@@ -74,7 +73,7 @@ class CommandRegistry:
         
         return None
     
-    def execute(self, user_input: str) -> Optional[str]:
+    def execute(self, user_input: str):
         """
         Find and execute a matching command.
         
@@ -87,7 +86,7 @@ class CommandRegistry:
             return command.execute(user_input)
         return None
     
-    def list_commands(self) -> List[Dict[str, str]]:
+    def list_commands(self) -> list:
         """List all registered commands."""
         return [
             {

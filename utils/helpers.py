@@ -12,10 +12,14 @@ init(autoreset=True)
 def clean_text_for_speech(text: str) -> str:
     """
     Clean text to make it suitable for text-to-speech.
+    Preserves emotion markers [happy], [sad] etc for TTS processing.
     Removes markdown, links, emojis, and other non-speakable content.
     """
     if not text:
         return text
+    
+    # Preserve emotion markers at the start - don't remove them
+    # The TTS service will handle these
     
     # Remove URLs
     text = re.sub(r'https?://\S+', '', text)
@@ -34,7 +38,7 @@ def clean_text_for_speech(text: str) -> str:
     text = re.sub(r'```[\s\S]*?```', '', text)
     text = re.sub(r'`(.+?)`', r'\1', text)
     
-    # Remove markdown links [text](url)
+    # Remove markdown links [text](url) but NOT emotion markers like [happy]
     text = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', text)
     
     # Remove bullet points and list markers
@@ -43,10 +47,10 @@ def clean_text_for_speech(text: str) -> str:
     
     # Remove emojis and special unicode characters
     emoji_pattern = re.compile("["
-        u"\U0001F600-\U0001F64F"  # emoticons
-        u"\U0001F300-\U0001F5FF"  # symbols & pictographs
-        u"\U0001F680-\U0001F6FF"  # transport & map symbols
-        u"\U0001F1E0-\U0001F1FF"  # flags
+        u"\U0001F600-\U0001F64F"
+        u"\U0001F300-\U0001F5FF"
+        u"\U0001F680-\U0001F6FF"
+        u"\U0001F1E0-\U0001F1FF"
         u"\U00002702-\U000027B0"
         u"\U000024C2-\U0001F251"
         u"\U0001f926-\U0001f937"
@@ -66,8 +70,8 @@ def clean_text_for_speech(text: str) -> str:
     text = re.sub(r'\n+', ' ', text)
     text = re.sub(r'\s+', ' ', text)
     
-    # Remove any remaining special characters that shouldn't be spoken
-    text = re.sub(r'[<>{}\[\]|\\^~]', '', text)
+    # Remove special characters but preserve emotion markers in brackets
+    text = re.sub(r'[<>{}|\\^~]', '', text)
     
     return text.strip()
 

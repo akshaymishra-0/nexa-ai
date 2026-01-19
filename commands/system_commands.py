@@ -3,7 +3,6 @@ Built-in system commands for AVA.
 """
 import datetime
 import webbrowser
-from typing import Optional, List
 from .base_command import BaseCommand
 
 
@@ -15,14 +14,14 @@ class TimeCommand(BaseCommand):
         return "time"
     
     @property
-    def triggers(self) -> List[str]:
+    def triggers(self) -> list:
         return ["what time is it", "tell me the time", "current time", "what's the time"]
     
     @property
     def description(self) -> str:
         return "Tells the current time"
     
-    def execute(self, user_input: str) -> Optional[str]:
+    def execute(self, user_input: str):
         current_time = datetime.datetime.now().strftime("%I:%M %p")
         return f"The current time is {current_time}."
 
@@ -35,14 +34,14 @@ class DateCommand(BaseCommand):
         return "date"
     
     @property
-    def triggers(self) -> List[str]:
+    def triggers(self) -> list:
         return ["what's the date", "what date is it", "tell me the date", "today's date"]
     
     @property
     def description(self) -> str:
         return "Tells the current date"
     
-    def execute(self, user_input: str) -> Optional[str]:
+    def execute(self, user_input: str):
         current_date = datetime.datetime.now().strftime("%B %d, %Y")
         return f"Today is {current_date}."
 
@@ -55,15 +54,15 @@ class ExitCommand(BaseCommand):
         return "exit"
     
     @property
-    def triggers(self) -> List[str]:
+    def triggers(self) -> list:
         return ["goodbye", "bye", "exit", "quit", "stop", "shut down", "go to sleep"]
     
     @property
     def description(self) -> str:
         return "Exits the assistant"
     
-    def execute(self, user_input: str) -> Optional[str]:
-        return "__EXIT__"  # Special signal to exit
+    def execute(self, user_input: str):
+        return "__EXIT__"
 
 
 class OpenWebsiteCommand(BaseCommand):
@@ -74,14 +73,14 @@ class OpenWebsiteCommand(BaseCommand):
         return "open_website"
     
     @property
-    def triggers(self) -> List[str]:
+    def triggers(self) -> list:
         return ["open youtube", "open google", "open github", "open stackoverflow"]
     
     @property
     def description(self) -> str:
         return "Opens common websites"
     
-    def execute(self, user_input: str) -> Optional[str]:
+    def execute(self, user_input: str):
         websites = {
             "youtube": "https://www.youtube.com",
             "google": "https://www.google.com",
@@ -108,14 +107,14 @@ class HelpCommand(BaseCommand):
         return "help"
     
     @property
-    def triggers(self) -> List[str]:
+    def triggers(self) -> list:
         return ["what can you do", "help me", "show commands", "list commands"]
     
     @property
     def description(self) -> str:
         return "Shows available commands"
     
-    def execute(self, user_input: str) -> Optional[str]:
+    def execute(self, user_input: str):
         commands = self.registry.list_commands()
         response = "Here's what I can do: "
         response += ", ".join([cmd["name"] for cmd in commands])
@@ -134,15 +133,15 @@ class ContinueCommand(BaseCommand):
         return "continue"
     
     @property
-    def triggers(self) -> List[str]:
+    def triggers(self) -> list:
         return ["continue", "go on", "keep going", "resume", "continue speaking"]
     
     @property
     def description(self) -> str:
         return "Continues speaking the last response"
     
-    def execute(self, user_input: str) -> Optional[str]:
-        return "__CONTINUE__"  # Special signal to continue
+    def execute(self, user_input: str):
+        return "__CONTINUE__"
 
 
 class StopCommand(BaseCommand):
@@ -156,12 +155,12 @@ class StopCommand(BaseCommand):
         return "stop_speaking"
     
     @property
-    def triggers(self) -> List[str]:
+    def triggers(self) -> list:
         return ["stop", "shut up", "be quiet", "silence", "enough", "okay stop"]
     
     @property
     def description(self) -> str:
         return "Stops AVA from speaking"
     
-    def execute(self, user_input: str) -> Optional[str]:
-        return "__STOP__"  # Special signal to stop
+    def execute(self, user_input: str):
+        return "__STOP__"

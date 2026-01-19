@@ -5,7 +5,6 @@ Handles system operations like opening/closing apps, playing videos, browser con
 import subprocess
 import os
 import webbrowser
-from typing import Optional, List
 from .base_command import BaseCommand
 from utils.helpers import log_message
 
@@ -13,7 +12,6 @@ from utils.helpers import log_message
 class OpenAppCommand(BaseCommand):
     """Command to open applications."""
     
-    # Common Windows applications and their executable names/paths
     APPS = {
         "notepad": "notepad.exe",
         "calculator": "calc.exe",
@@ -62,26 +60,23 @@ class OpenAppCommand(BaseCommand):
         return "open_app"
     
     @property
-    def triggers(self) -> List[str]:
+    def triggers(self) -> list:
         return ["open", "launch", "start", "run"]
     
     @property
     def description(self) -> str:
         return "Opens applications on your computer"
     
-    def execute(self, user_input: str) -> Optional[str]:
+    def execute(self, user_input: str):
         user_input_lower = user_input.lower()
         
-        # Check if this is an open command
         if not any(trigger in user_input_lower for trigger in ["open", "launch", "start", "run"]):
             return None
         
-        # Find which app to open
         for app_name, app_path in self.APPS.items():
             if app_name in user_input_lower:
                 try:
                     if app_path.endswith(":"):
-                        # Windows URI scheme (like ms-settings:)
                         os.startfile(app_path)
                     else:
                         subprocess.Popen(app_path, shell=True)
@@ -97,7 +92,6 @@ class OpenAppCommand(BaseCommand):
 class CloseAppCommand(BaseCommand):
     """Command to close applications."""
     
-    # Process names for common apps
     PROCESS_NAMES = {
         "notepad": "notepad.exe",
         "calculator": "CalculatorApp.exe",
@@ -121,7 +115,7 @@ class CloseAppCommand(BaseCommand):
         "file explorer": "explorer.exe",
         "explorer": "explorer.exe",
         "task manager": "Taskmgr.exe",
-        "browser": "msedge.exe",  # Default browser
+        "browser": "msedge.exe",
         "all browsers": ["chrome.exe", "firefox.exe", "msedge.exe", "brave.exe", "opera.exe"],
     }
     
@@ -130,37 +124,31 @@ class CloseAppCommand(BaseCommand):
         return "close_app"
     
     @property
-    def triggers(self) -> List[str]:
+    def triggers(self) -> list:
         return ["close", "kill", "stop", "terminate", "end"]
     
     @property
     def description(self) -> str:
         return "Closes applications on your computer"
     
-    def execute(self, user_input: str) -> Optional[str]:
+    def execute(self, user_input: str):
         user_input_lower = user_input.lower()
         
-        # Check if this is a close command
         if not any(trigger in user_input_lower for trigger in ["close", "kill", "stop", "terminate", "end"]):
             return None
         
-        # Don't close if it's an exit command for AVA
         if any(word in user_input_lower for word in ["goodbye", "bye", "ava", "assistant"]):
             return None
         
-        # Find which app to close
         for app_name, process in self.PROCESS_NAMES.items():
             if app_name in user_input_lower:
                 try:
                     if isinstance(process, list):
-                        # Close multiple processes (like all browsers)
                         for proc in process:
-                            subprocess.run(f'taskkill /F /IM {proc}', shell=True, 
-                                         capture_output=True)
+                            subprocess.run(f'taskkill /F /IM {proc}', shell=True, capture_output=True)
                         return f"Closing all {app_name}."
                     else:
-                        result = subprocess.run(f'taskkill /F /IM {process}', 
-                                              shell=True, capture_output=True)
+                        result = subprocess.run(f'taskkill /F /IM {process}', shell=True, capture_output=True)
                         if result.returncode == 0:
                             return f"Closed {app_name}."
                         else:
@@ -180,44 +168,30 @@ class BrowserSearchCommand(BaseCommand):
         return "browser_search"
     
     @property
-    def triggers(self) -> List[str]:
+    def triggers(self) -> list:
         return ["search for", "google", "look up", "find me", "search", "browse"]
     
     @property
     def description(self) -> str:
         return "Searches for something in your browser"
     
-    def execute(self, user_input: str) -> Optional[str]:
+    def execute(self, user_input: str):
         user_input_lower = user_input.lower()
-        
-        # Extract search query
         search_query = None
         
-        # Pattern matching for different phrasings
-        patterns = [
-            "search for ",
-            "google ",
-            "look up ",
-            "find me ",
-            "search ",
-            "browse for ",
-            "browse ",
-        ]
+        patterns = ["search for ", "google ", "look up ", "find me ", "search ", "browse for ", "browse "]
         
         for pattern in patterns:
             if pattern in user_input_lower:
-                # Get everything after the pattern
                 idx = user_input_lower.find(pattern)
                 search_query = user_input[idx + len(pattern):].strip()
                 break
         
         if search_query:
-            # Remove common endings
             for ending in [" on google", " on the internet", " online", " on web"]:
                 if search_query.lower().endswith(ending):
                     search_query = search_query[:-len(ending)]
             
-            # Create Google search URL
             search_url = f"https://www.google.com/search?q={search_query.replace(' ', '+')}"
             webbrowser.open(search_url)
             log_message(f"Searching for: {search_query}", "success")
@@ -234,30 +208,21 @@ class PlayVideoCommand(BaseCommand):
         return "play_video"
     
     @property
-    def triggers(self) -> List[str]:
+    def triggers(self) -> list:
         return ["play", "play video", "play music", "play song", "watch"]
     
     @property
     def description(self) -> str:
         return "Plays videos or music from YouTube"
     
-    def execute(self, user_input: str) -> Optional[str]:
+    def execute(self, user_input: str):
         user_input_lower = user_input.lower()
         
-        # Check if this is a play command
         if not any(trigger in user_input_lower for trigger in ["play", "watch"]):
             return None
         
-        # Extract what to play
         query = None
-        
-        patterns = [
-            "play video ",
-            "play music ",
-            "play song ",
-            "play ",
-            "watch ",
-        ]
+        patterns = ["play video ", "play music ", "play song ", "play ", "watch "]
         
         for pattern in patterns:
             if pattern in user_input_lower:
@@ -266,12 +231,10 @@ class PlayVideoCommand(BaseCommand):
                 break
         
         if query:
-            # Remove common phrases
             for phrase in [" on youtube", " video", " from youtube"]:
                 if query.lower().endswith(phrase):
                     query = query[:-len(phrase)]
             
-            # Search on YouTube
             youtube_url = f"https://www.youtube.com/results?search_query={query.replace(' ', '+')}"
             webbrowser.open(youtube_url)
             log_message(f"Playing: {query}", "success")
@@ -288,38 +251,34 @@ class VolumeControlCommand(BaseCommand):
         return "volume_control"
     
     @property
-    def triggers(self) -> List[str]:
+    def triggers(self) -> list:
         return ["volume", "mute", "unmute", "louder", "quieter", "sound"]
     
     @property
     def description(self) -> str:
         return "Controls system volume"
     
-    def execute(self, user_input: str) -> Optional[str]:
+    def execute(self, user_input: str):
         user_input_lower = user_input.lower()
         
         try:
             if "mute" in user_input_lower and "unmute" not in user_input_lower:
-                # Mute
                 subprocess.run('powershell -c "(New-Object -ComObject WScript.Shell).SendKeys([char]173)"', 
                              shell=True, capture_output=True)
                 return "System muted."
             
             elif "unmute" in user_input_lower:
-                # Unmute
                 subprocess.run('powershell -c "(New-Object -ComObject WScript.Shell).SendKeys([char]173)"', 
                              shell=True, capture_output=True)
                 return "System unmuted."
             
             elif any(word in user_input_lower for word in ["increase", "up", "louder", "higher", "raise"]):
-                # Increase volume
                 for _ in range(5):
                     subprocess.run('powershell -c "(New-Object -ComObject WScript.Shell).SendKeys([char]175)"', 
                                  shell=True, capture_output=True)
                 return "Volume increased."
             
             elif any(word in user_input_lower for word in ["decrease", "down", "quieter", "lower", "reduce"]):
-                # Decrease volume
                 for _ in range(5):
                     subprocess.run('powershell -c "(New-Object -ComObject WScript.Shell).SendKeys([char]174)"', 
                                  shell=True, capture_output=True)
@@ -346,17 +305,16 @@ class SystemControlCommand(BaseCommand):
         return "system_control"
     
     @property
-    def triggers(self) -> List[str]:
+    def triggers(self) -> list:
         return ["shutdown", "restart", "sleep", "lock", "log off", "hibernate"]
     
     @property
     def description(self) -> str:
         return "Controls system power options"
     
-    def execute(self, user_input: str) -> Optional[str]:
+    def execute(self, user_input: str):
         user_input_lower = user_input.lower()
         
-        # These are destructive operations, so be careful
         try:
             if "shutdown" in user_input_lower or "shut down" in user_input_lower:
                 return "For safety, please use the Start menu to shutdown. Say 'yes shutdown' to confirm."
@@ -364,16 +322,6 @@ class SystemControlCommand(BaseCommand):
             elif "restart" in user_input_lower:
                 return "For safety, please use the Start menu to restart. Say 'yes restart' to confirm."
             
-            elif "sleep" in user_input_lower:
-                subprocess.run('rundll32.exe powrprof.dll,SetSuspendState 0,1,0', shell=True)
-                return "Putting the computer to sleep."
-            
-            elif "lock" in user_input_lower:
-                subprocess.run('rundll32.exe user32.dll,LockWorkStation', shell=True)
-                return "Locking the computer."
-            
-            elif "log off" in user_input_lower or "logoff" in user_input_lower:
-                return "For safety, please use the Start menu to log off."
             
         except Exception as e:
             log_message(f"Error with system control: {e}", "error")
@@ -390,24 +338,22 @@ class ScreenshotCommand(BaseCommand):
         return "screenshot"
     
     @property
-    def triggers(self) -> List[str]:
+    def triggers(self) -> list:
         return ["screenshot", "screen shot", "capture screen", "take a screenshot", "snip"]
     
     @property
     def description(self) -> str:
         return "Takes a screenshot"
     
-    def execute(self, user_input: str) -> Optional[str]:
+    def execute(self, user_input: str):
         user_input_lower = user_input.lower()
         
         if any(word in user_input_lower for word in ["screenshot", "screen shot", "capture screen", "snip"]):
             try:
-                # Open Snipping Tool
                 subprocess.Popen('snippingtool.exe', shell=True)
                 return "Opening the snipping tool. Select the area you want to capture."
             except:
                 try:
-                    # Try Windows + Shift + S shortcut
                     subprocess.run('powershell -c "(New-Object -ComObject WScript.Shell).SendKeys(\'^+s\')"', 
                                  shell=True, capture_output=True)
                     return "Opening screenshot tool. Select the area you want to capture."

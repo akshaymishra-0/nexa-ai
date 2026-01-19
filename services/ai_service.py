@@ -3,7 +3,6 @@ AI Service for AVA.
 Handles communication with OpenRouter API for AI responses.
 """
 import requests
-from typing import Optional, List, Dict
 from utils.helpers import log_message
 from config.settings import settings
 
@@ -16,33 +15,25 @@ class AIService:
         self.base_url = settings.OPENROUTER_BASE_URL
         self.model = settings.AI_MODEL
         self.system_prompt = settings.SYSTEM_PROMPT
-        
-        # Conversation history for context
-        self.conversation_history: List[Dict[str, str]] = []
-        self.max_history = 10  # Keep last 10 exchanges
+        self.conversation_history = []
+        self.max_history = 10
     
-    def _build_messages(self, user_message: str) -> List[Dict[str, str]]:
+    def _build_messages(self, user_message: str) -> list:
         """Build the messages array for the API request."""
         messages = [{"role": "system", "content": self.system_prompt}]
-        
-        # Add conversation history
         messages.extend(self.conversation_history)
-        
-        # Add current user message
         messages.append({"role": "user", "content": user_message})
-        
         return messages
     
-    def _update_history(self, user_message: str, assistant_response: str) -> None:
+    def _update_history(self, user_message: str, assistant_response: str):
         """Update conversation history."""
         self.conversation_history.append({"role": "user", "content": user_message})
         self.conversation_history.append({"role": "assistant", "content": assistant_response})
         
-        # Trim history if too long
         if len(self.conversation_history) > self.max_history * 2:
             self.conversation_history = self.conversation_history[-self.max_history * 2:]
     
-    def get_response(self, user_message: str) -> Optional[str]:
+    def get_response(self, user_message: str):
         """
         Get AI response for a user message.
         

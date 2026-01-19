@@ -3,7 +3,6 @@ Speech Recognition Service for AVA.
 Handles converting speech to text using various backends.
 """
 import speech_recognition as sr
-from typing import Optional, Tuple
 from utils.helpers import log_message
 
 
@@ -13,11 +12,9 @@ class SpeechRecognitionService:
     def __init__(self):
         self.recognizer = sr.Recognizer()
         self.microphone = sr.Microphone()
-        
-        # Adjust for ambient noise on initialization
         self._calibrate_microphone()
     
-    def _calibrate_microphone(self) -> None:
+    def _calibrate_microphone(self):
         """Calibrate microphone for ambient noise."""
         try:
             with self.microphone as source:
@@ -25,7 +22,7 @@ class SpeechRecognitionService:
         except Exception as e:
             log_message(f"Error calibrating microphone: {e}", "error")
     
-    def listen(self, timeout: int = 15, phrase_time_limit: int = 60) -> Tuple[bool, Optional[str]]:
+    def listen(self, timeout: int = 15, phrase_time_limit: int = 60) -> tuple:
         """
         Listen for speech and convert to text.
         

@@ -1,0 +1,19 @@
+# Core dependencies
+python-dotenv==1.0.0
+requests==2.31.0
+setuptools>=69.0.0  # Required for Python 3.12+ (provides distutils)
+
+# Speech Recognition
+SpeechRecognition==3.10.0
+PyAudio==0.2.14
+
+# Text to Speech (Edge TTS - realistic Microsoft voices)
+edge-tts>=6.1.0
+pygame>=2.5.0
+keyboard>=0.13.5  # For keyboard interrupt detection
+
+# For async operations (future scalability)
+aiohttp==3.9.1
+
+# Utilities
+colorama==0.4.6

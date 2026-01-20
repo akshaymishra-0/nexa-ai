@@ -6,6 +6,7 @@ setuptools>=69.0.0  # Required for Python 3.12+ (provides distutils)
 # Speech Recognition
 SpeechRecognition==3.10.0
 PyAudio==0.2.14
+faster-whisper  # Offline speech recognition with Whisper
 
 # Text to Speech (Edge TTS - realistic Microsoft voices)
 edge-tts>=6.1.0

@@ -1,5 +1,5 @@
 """
-Built-in system commands for AVA.
+Built-in system commands for NEXA.
 """
 import datetime
 import webbrowser
@@ -160,7 +160,7 @@ class StopCommand(BaseCommand):
     
     @property
     def description(self) -> str:
-        return "Stops AVA from speaking"
+        return "Stops NEXA from speaking"
     
     def execute(self, user_input: str):
         return "__STOP__"

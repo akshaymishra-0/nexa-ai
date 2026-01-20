@@ -1,11 +1,11 @@
-# AVA - Advanced Virtual Assistant
+# NEXA - Advanced Virtual Assistant
 
-A personal AI voice assistant built with Python, similar to Jarvis. AVA can understand natural language, respond with voice, and execute commands.
+A personal AI voice assistant built with Python, similar to Jarvis. NEXA can understand natural language, respond with voice, and execute commands.
 
 ## Features
 
-- 🎤 **Voice Recognition**: Speak naturally to interact with AVA
-- 🔊 **Text-to-Speech**: AVA responds with natural voice output
+- 🎤 **Voice Recognition**: Speak naturally to interact with NEXA
+- 🔊 **Text-to-Speech**: NEXA responds with natural voice output
 - 🤖 **AI-Powered**: Uses OpenRouter's free AI models for intelligent conversations
 - 🔌 **Extensible Commands**: Easy to add custom commands
 - 💬 **Context-Aware**: Maintains conversation history for context
@@ -14,7 +14,7 @@ A personal AI voice assistant built with Python, similar to Jarvis. AVA can unde
 ## Project Structure
 
 ```
-AVA/
+NEXA/
 ├── main.py                 # Entry point
 ├── .env                    # Environment variables (API keys)
 ├── .env.example            # Example environment file
@@ -44,7 +44,7 @@ AVA/
 
 1. **Clone or navigate to the project**:
    ```bash
-   cd AVA
+   cd NEXA
    ```
 
 2. **Create a virtual environment** (recommended):
@@ -125,8 +125,8 @@ Edit `.env` file to customize:
 |----------|-------------|---------|
 | `OPENROUTER_API_KEY` | Your OpenRouter API key | Required |
 | `AI_MODEL` | AI model to use | meta-llama/llama-3.2-3b-instruct:free |
-| `ASSISTANT_NAME` | Name of the assistant | AVA |
-| `WAKE_WORD` | Word to activate assistant | ava |
+| `ASSISTANT_NAME` | Name of the assistant | NEXA |
+| `WAKE_WORD` | Word to activate assistant | nexa |
 | `SPEECH_RATE` | Speech speed (100-300) | 175 |
 | `SPEECH_VOLUME` | Volume level (0.0-1.0) | 1.0 |
 

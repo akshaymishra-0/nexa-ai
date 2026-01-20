@@ -1,5 +1,5 @@
 """
-Base Command System for AVA.
+Base Command System for NEXA.
 Provides extensible command handling for custom commands.
 """
 from abc import ABC, abstractmethod

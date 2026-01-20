@@ -1,5 +1,5 @@
 """
-Settings configuration for AVA.
+Settings configuration for NEXA.
 Loads environment variables and provides centralized configuration.
 """
 import os
@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 class Settings:
-    """Centralized settings management for AVA."""
+    """Centralized settings management for NEXA."""
     
     def __init__(self):
         # Load environment variables from .env file
@@ -23,8 +23,15 @@ class Settings:
         self.AI_MODEL = os.getenv('AI_MODEL', 'meta-llama/llama-3.2-3b-instruct:free')
         
         # Assistant Configuration
-        self.ASSISTANT_NAME = os.getenv('ASSISTANT_NAME', 'AVA')
-        self.WAKE_WORD = os.getenv('WAKE_WORD', 'ava').lower()
+        self.ASSISTANT_NAME = os.getenv('ASSISTANT_NAME', 'NEXA')
+        self.WAKE_WORD = os.getenv('WAKE_WORD', 'nexa').lower()
+        self.STOP_WORD = os.getenv('STOP_WORD', 'sleep').lower()  # Word to deactivate assistant
+        self.GOODBYE_WORDS = ['goodbye', 'bye bye', 'exit', 'quit', 'shut down']
+        
+        # Continuous Listening Settings
+        self.CONTINUOUS_LISTEN = True  # Always listening mode
+        self.WAKE_TIMEOUT = None  # No timeout when waiting for wake word (always listening)
+        self.ACTIVE_TIMEOUT = 30  # Seconds to stay active after wake word before going back to sleep
         
         # Speech Settings
         self.SPEECH_RATE = int(os.getenv('SPEECH_RATE', 175))

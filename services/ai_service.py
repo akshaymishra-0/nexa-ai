@@ -1,5 +1,5 @@
 """
-AI Service for AVA.
+AI Service for NEXA.
 Handles communication with OpenRouter API for AI responses.
 """
 import requests
@@ -52,7 +52,7 @@ class AIService:
                 "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json",
                 "HTTP-Referer": "http://localhost",  # Required by OpenRouter
-                "X-Title": "AVA Personal Assistant"
+                "X-Title": "NEXA Personal Assistant"
             }
             
             payload = {

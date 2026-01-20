@@ -1,4 +1,4 @@
-"""Services package for AVA."""
+"""Services package for NEXA."""
 from .speech_recognition_service import SpeechRecognitionService
 from .text_to_speech_service import TextToSpeechService
 from .ai_service import AIService

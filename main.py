@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AVA - Advanced Virtual Assistant
+NEXA - Advanced Virtual Assistant
 A personal AI voice assistant built with Python.
 
 Author: Akshay Mishra
@@ -18,7 +18,7 @@ from utils.helpers import print_colored, log_message
 
 
 def print_banner():
-    """Print the AVA startup banner."""
+    """Print the NEXA startup banner."""
     banner = """
     ╔═══════════════════════════════════════════════════════════╗
     ║                                                           ║
@@ -38,7 +38,7 @@ def print_banner():
 
 
 def check_configuration():
-    """Check if AVA is properly configured."""
+    """Check if NEXA is properly configured."""
     if not settings.validate():
         print_colored("\n⚠️  WARNING: OpenRouter API key not configured!", "yellow")
         print_colored("Please add your API key to the .env file.", "yellow")
@@ -48,9 +48,9 @@ def check_configuration():
 
 
 def main():
-    """Main entry point for AVA."""
+    """Main entry point for NEXA."""
     parser = argparse.ArgumentParser(
-        description="AVA - Advanced Virtual Assistant",
+        description="NEXA - Advanced Virtual Assistant",
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     

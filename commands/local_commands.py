@@ -1,5 +1,5 @@
 """
-Local System Commands for AVA.
+Local System Commands for NEXA.
 Handles system operations like opening/closing apps, playing videos, browser control, etc.
 """
 import subprocess
@@ -137,7 +137,7 @@ class CloseAppCommand(BaseCommand):
         if not any(trigger in user_input_lower for trigger in ["close", "kill", "stop", "terminate", "end"]):
             return None
         
-        if any(word in user_input_lower for word in ["goodbye", "bye", "ava", "assistant"]):
+        if any(word in user_input_lower for word in ["goodbye", "bye", "nexa", "assistant"]):
             return None
         
         for app_name, process in self.PROCESS_NAMES.items():

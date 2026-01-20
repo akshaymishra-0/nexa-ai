@@ -1,5 +1,5 @@
 """
-Text to Speech Service for AVA.
+Text to Speech Service for NEXA.
 Uses Edge TTS for natural, realistic voice output with emotional expression.
 """
 import os
@@ -51,12 +51,12 @@ class TextToSpeechService:
     
     def __init__(self):
         self.voice = self.VOICES.get("neerja", "en-IN-NeerjaNeural")
-        self.base_rate = "+5%"
+        self.base_rate = "+10%"
         self.volume = "+0%"
         self.is_speaking = False
         self.was_interrupted = False
         self.last_response = ""
-        self.current_emotion = "excited"
+        self.current_emotion = "neutral"
         
         try:
             mixer.init()

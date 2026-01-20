@@ -1,5 +1,5 @@
 """
-Conversation Manager for AVA.
+Conversation Manager for NEXA.
 Handles conversation flow and context management.
 """
 from datetime import datetime

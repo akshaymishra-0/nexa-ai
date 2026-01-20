@@ -1,12 +1,27 @@
 """
-Helper utilities for AVA.
+Helper utilities for NEXA.
 """
 import re
 from datetime import datetime
 from colorama import Fore, Style, init
+from unidecode import unidecode
 
 # Initialize colorama for Windows support
 init(autoreset=True)
+
+
+def romanize_text(text: str) -> str:
+    """Convert Hindi/Bengali script to English letters (romanize)."""
+    if not text:
+        return text
+    return unidecode(text)
+
+
+def remove_emotion_markers(text: str) -> str:
+    """Remove emotion markers like [happy], [sad] for display."""
+    if not text:
+        return text
+    return re.sub(r'\[(happy|sad|loving|flirty|excited|caring|playful|worried|surprised|thoughtful)\]\s*', '', text, flags=re.IGNORECASE).strip()
 
 
 def clean_text_for_speech(text: str) -> str:
